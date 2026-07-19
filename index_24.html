@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkpoint — verified answers from your own exchange chats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --desk: #3B1017;
+    --desk-deep: #240810;
+    --paper: #F6F1E4;
+    --paper-raised: #FBF8F1;
+    --paper-dim: #EFE6D2;
+    --ink: #2B241E;
+    --ink-soft: #6B6156;
+    --cream: #F1E6CC;
+    --cream-soft: #D9C9A3;
+    --stamp: #8B2635;
+    --stamp-dark: #5C1A24;
+    --stamp-wash: #F3E1E0;
+    --brass: #A9812E;
+    --brass-wash: #F1E8D2;
+    --sage: #5C7A5E;
+    --sage-wash: #E6EBE1;
+    --line: #DCCFAF;
+    --line-strong: #C9B98D;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--desk);
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(169,129,46,0.12), transparent 40%),
+      radial-gradient(circle at 92% 90%, rgba(0,0,0,0.4), transparent 55%),
+      radial-gradient(ellipse at center, var(--desk) 0%, var(--desk-deep) 100%);
+    color: var(--cream);
+    margin: 0;
+    padding: 0 20px 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 48px 0 30px;
+    position: relative;
+  }
+  header .title-block { position: relative; padding-left: 6px; }
+  header .title-block h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 38px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    color: var(--cream);
+  }
+  header .title-block p {
+    font-size: 14.5px;
+    color: var(--cream-soft);
+    margin: 0;
+    max-width: 40ch;
+    line-height: 1.6;
+  }
+  .tape {
+    position: absolute;
+    top: -18px;
+    left: 26px;
+    width: 74px;
+    height: 24px;
+    background: repeating-linear-gradient(45deg, rgba(241,232,210,0.88), rgba(241,232,210,0.88) 4px, rgba(217,201,163,0.72) 4px, rgba(217,201,163,0.72) 8px);
+    opacity: 0.85;
+    transform: rotate(-6deg);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+  }
+  .paperclip {
+    position: absolute;
+    top: -8px;
+    right: -14px;
+    width: 26px;
+    height: 46px;
+    opacity: 0.85;
+    transform: rotate(12deg);
+  }
+
+  .header-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    position: relative;
+    padding: 10px 22px 10px 10px;
+  }
+  .stamp-badge {
+    width: 94px;
+    height: 94px;
+    border: 2px solid var(--brass);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(-9deg);
+    animation: stamp-in 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+    animation-delay: 0.15s;
+    flex-shrink: 0;
+    z-index: 3;
+    background: var(--desk);
+  }
+  .stamp-badge::before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--brass);
+    border-radius: 50%;
+  }
+  .stamp-badge span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--brass);
+    text-align: center;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+  @keyframes stamp-in {
+    0% { opacity: 0; transform: rotate(-9deg) scale(1.6); }
+    100% { opacity: 1; transform: rotate(-9deg) scale(1); }
+  }
+
+  /* ticket-stub shaped counter */
+  .collected-chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--desk);
+    background: var(--cream);
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    position: relative;
+    z-index: 3;
+    clip-path: polygon(
+      0% 0%, 46% 0%, 50% 22%, 54% 0%, 100% 0%,
+      100% 100%, 54% 100%, 50% 78%, 46% 100%, 0% 100%
+    );
+  }
+  .collected-chip.pulse { animation: chip-pulse 0.4s ease; }
+  @keyframes chip-pulse {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); background: var(--brass-wash); }
+    100% { transform: scale(1); }
+  }
+
+  /* ---------- Tab nav — folder tabs ---------- */
+  nav.tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 0;
+    padding-top: 8px;
+    position: relative;
+    z-index: 2;
+  }
+  nav.tabs button {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 10px 16px 9px;
+    border: none;
+    background: var(--cream-soft);
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    clip-path: polygon(6% 0, 94% 0, 100% 100%, 0% 100%);
+    opacity: 0.75;
+    transform: translateY(4px);
+  }
+  nav.tabs button:hover { opacity: 0.9; }
+  nav.tabs button.active {
+    background: var(--paper-raised);
+    color: var(--stamp-dark);
+    opacity: 1;
+    transform: translateY(0);
+    font-weight: 600;
+  }
+  nav.tabs button:active { transform: translateY(0) scale(0.98); }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fade-in 0.25s ease both; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- Collage pieces peeking from behind the badge and chip ---------- */
+  .collage-piece { position: absolute; box-shadow: 2px 3px 7px rgba(0,0,0,0.35); }
+  .hs-envelope {
+    width: 108px; height: 66px;
+    background: var(--cream);
+    top: -6px; left: -18px;
+    transform: rotate(-9deg);
+    z-index: 1;
+  }
+  .hs-envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 34px;
+    background: var(--cream-soft);
+    clip-path: polygon(0 0, 50% 60%, 100% 0);
+  }
+  .hs-note {
+    width: 78px; height: 96px;
+    background: var(--paper-raised);
+    top: 46px; right: -20px;
+    left: auto;
+    transform: rotate(8deg);
+    z-index: 1;
+    padding: 8px 8px;
+  }
+  .hs-note-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 10.5px;
+    color: var(--stamp);
+    margin-bottom: 7px;
+  }
+  .hs-note-line { border-top: 1px solid var(--line-strong); margin-top: 8px; }
+  .hs-clip {
+    top: -14px; left: 20px;
+    width: 46px; height: 20px;
+    z-index: 4;
+    transform: rotate(-4deg);
+  }
+  .hs-paperclip {
+    top: 78px; left: -20px;
+    width: 20px; height: 34px;
+    z-index: 4;
+    transform: rotate(20deg);
+    opacity: 0.9;
+  }
+  @media (max-width: 900px) {
+    .hs-envelope, .hs-note, .hs-clip, .hs-paperclip { display: none; }
+    .header-side { padding: 0; }
+  }
+
+  .sheet-stack { position: relative; }
+  .sheet-stack::before {
+    content: '';
+    position: absolute;
+    inset: 10px -8px -10px 10px;
+    background: var(--paper-dim);
+    border-radius: 4px 12px 12px 12px;
+    transform: rotate(1.4deg);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+    z-index: 0;
+  }
+  .sheet {
+    background: var(--paper-raised);
+    border-radius: 4px 12px 12px 12px;
+    padding: 30px 32px 34px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- About page ---------- */
+  .about-lead {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 24px;
+  }
+  .about-block { margin-bottom: 22px; }
+  .about-block h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 16px;
+    margin: 0 0 8px;
+    color: var(--stamp-dark);
+  }
+  .about-block p { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin: 0; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0 26px;
+  }
+  .about-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 14px 16px;
+    box-shadow: 2px 3px 6px rgba(43,36,30,0.12);
+  }
+  .about-card:nth-child(1) { transform: rotate(-1deg); }
+  .about-card:nth-child(2) { transform: rotate(0.8deg); }
+  .about-card:nth-child(3) { transform: rotate(-0.6deg); }
+  .about-card:nth-child(4) { transform: rotate(1.2deg); }
+  .about-card .k {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--brass);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .about-card .v { font-size: 13px; line-height: 1.5; color: var(--ink); }
+
+  /* ---------- Checkpoint sections ---------- */
+  .checkpoint { margin-bottom: 26px; }
+  .checkpoint:last-child { margin-bottom: 0; }
+  .checkpoint-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .checkpoint-index {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--brass);
+    border: 1px solid var(--brass);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .checkpoint-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .checkpoint-body {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    margin-bottom: 22px;
+    color: var(--ink-soft);
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); flex-shrink: 0; }
+  .dot.on { background: var(--sage); box-shadow: 0 0 0 3px var(--sage-wash); }
+  .dot.off { background: var(--stamp); box-shadow: 0 0 0 3px var(--stamp-wash); }
+  .status-bar .fill { flex: 1; }
+  .status-bar label { font-size: 11px; color: var(--ink-soft); margin-right: 6px; }
+  .status-bar input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    width: 130px;
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+
+  label.field-label { display: block; font-size: 12px; font-weight: 500; color: var(--ink-soft); margin-bottom: 6px; }
+  input[type=text], textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14.5px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  input[type=text]:focus, textarea:focus, button:focus-visible, input[type=file]:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 1px;
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+  .field-gap { margin-bottom: 14px; }
+
+  input[type=file] { font-family: 'IBM Plex Sans', sans-serif; font-size: 12.5px; color: var(--ink-soft); }
+  input[type=file]::file-selector-button {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 13px;
+    border-radius: var(--radius);
+    border: 1px solid var(--ink);
+    background: var(--paper-raised);
+    color: var(--ink);
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .ocr-status { font-size: 12px; color: var(--ink-soft); font-style: italic; }
+  .ocr-progress-wrap { margin: 8px 0 14px; display: none; }
+  .ocr-progress-track { background: var(--line); border-radius: 3px; height: 5px; overflow: hidden; }
+  .ocr-progress-bar { background: var(--brass); height: 100%; width: 0%; transition: width 0.2s ease; }
+
+  button {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--ink);
+    background: var(--paper-raised);
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.08s ease, background 0.15s ease;
+  }
+  button:hover { background: var(--paper); }
+  button:active { transform: scale(0.98); }
+  button.primary { background: var(--stamp); border-color: var(--stamp); color: var(--paper-raised); }
+  button.primary:hover { background: var(--stamp-dark); border-color: var(--stamp-dark); }
+  button.small { padding: 5px 11px; font-size: 11.5px; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .ask-row { display: flex; gap: 10px; }
+  .ask-row input { flex: 1; }
+  .hint { font-size: 12px; color: var(--ink-soft); margin-top: 10px; line-height: 1.55; }
+
+  /* ---------- Collection of stamps (sources) ---------- */
+  .stamp-collection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 18px;
+    padding-top: 4px;
+  }
+  .stamp-card {
+    width: 108px;
+    background: var(--paper-raised);
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 4px;
+    padding: 10px 8px 8px;
+    text-align: center;
+    position: relative;
+    box-shadow: 2px 4px 0 rgba(0,0,0,0.04), 0 4px 9px rgba(43,36,30,0.2);
+    animation: stamp-drop 0.3s cubic-bezier(0.2,1.3,0.4,1) both;
+  }
+  @keyframes stamp-drop {
+    0% { opacity: 0; transform: translateY(-10px) scale(0.7) rotate(0deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) var(--rot, rotate(0deg)); }
+  }
+  .stamp-card .mini-postmark {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 6px;
+    border: 1px solid var(--stamp);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .stamp-card .mini-postmark::before {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    border: 0.5px solid var(--stamp);
+    border-radius: 50%;
+  }
+  .stamp-card .mini-postmark svg { width: 13px; height: 13px; stroke: var(--stamp); }
+  .stamp-card .name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .stamp-card .remove-x {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--stamp);
+    color: var(--paper-raised);
+    border: none;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .stamp-card:hover .remove-x { opacity: 1; }
+  .empty-hint { color: var(--ink-soft); font-size: 13px; font-style: italic; }
+
+  .used-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--brass);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .answer-box { font-size: 15px; line-height: 1.75; color: var(--ink); }
+  .flag {
+    background: var(--brass-wash);
+    color: var(--stamp-dark);
+    padding: 1px 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    border-bottom: 1.5px dotted var(--brass);
+    font-weight: 500;
+  }
+  .flag:hover { background: #EAD9AE; }
+
+  .source-note {
+    display: none;
+    background: var(--paper-raised);
+    border: 1px solid var(--line-strong);
+    border-left: 3px solid var(--stamp);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .source-note.open { display: block; animation: fade-in 0.2s ease both; }
+  .source-note .src-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--stamp);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .grounding-row {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .grounding-label {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .grounding-label #groundingPct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .grounding-caption {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .grounding-track {
+    background: var(--line);
+    border-radius: 3px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .grounding-bar {
+    background: var(--sage);
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .grounding-bar.low { background: var(--stamp); }
+  .grounding-bar.mid { background: var(--brass); }
+
+  .flag-count {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    line-height: 1.55;
+  }
+  .flag-count svg { flex-shrink: 0; margin-top: 1px; }
+  .error-text { color: var(--stamp); }
+
+  pre.raw {
+    white-space: pre-wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    background: var(--paper-raised);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-top: 14px;
+    display: none;
+    line-height: 1.6;
+  }
+
+  /* ---------- Chat import picker (WhatsApp / Telegram) ---------- */
+  #chatPickerWrap { margin-bottom: 14px; }
+  #chatMessageList { max-height: 220px; overflow-y: auto; margin-top: 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised); }
+  #chatMessageList label {
+    display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px;
+    border-bottom: 1px solid var(--line); font-size: 12px; cursor: pointer; color: var(--ink);
+  }
+  .source-icon-row { display: flex; gap: 8px; margin-bottom: 4px; }
+  .source-icon-row button {
+    flex: 1;
+    font-size: 11.5px;
+    padding: 7px 8px;
+  }
+  .source-icon-row button.chosen { background: var(--stamp-wash); border-color: var(--stamp); color: var(--stamp-dark); }
+
+  /* ---------- History page ---------- */
+  .history-item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 15px 17px;
+    margin-bottom: 11px;
+    animation: fade-in 0.2s ease both;
+  }
+  .history-item .q-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 7px; }
+  .history-item .q-text { font-family: 'Fraunces', serif; font-weight: 500; font-size: 15px; color: var(--ink); }
+  .history-item .q-time { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-soft); white-space: nowrap; flex-shrink: 0; }
+  .history-item .q-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--brass); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 7px; }
+  .history-item .q-answer { font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+  .history-item .q-flags { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--stamp-dark); margin-top: 7px; }
+
+  /* ---------- Common questions page ---------- */
+  .common-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 17px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 9px;
+  }
+  .common-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--stamp);
+    background: var(--stamp-wash);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .common-text { font-size: 14px; color: var(--ink); }
+  .common-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+
+  @media (max-width: 560px) {
+    header { flex-direction: column; }
+    .header-side { flex-direction: row; align-self: flex-start; }
+    .ask-row { flex-direction: column; }
+    .about-grid { grid-template-columns: 1fr; }
+    .sheet { padding: 22px 18px 26px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title-block">
+      <div class="tape" aria-hidden="true"></div>
+      <svg class="paperclip" viewBox="0 0 24 44" fill="none" stroke="#C9B98D" stroke-width="2.2" aria-hidden="true">
+        <path d="M6 12 L6 32 a6 6 0 0 0 12 0 L18 8 a4 4 0 0 0 -8 0 L10 30 a2 2 0 0 0 4 0 L14 12"/>
+      </svg>
+      <h1>Checkpoint</h1>
+      <p>Ask what was actually said in your exchange chats and slides. Answers come from Gemma 4, running only on this computer, with anything worth double-checking marked for you to verify.</p>
+    </div>
+    <div class="header-side">
+      <div class="collage-piece hs-envelope" aria-hidden="true"></div>
+      <div class="collage-piece hs-note" aria-hidden="true">
+        <div class="hs-note-title">Field notes</div>
+        <div class="hs-note-line"></div>
+        <div class="hs-note-line"></div>
+        <div class="hs-note-line"></div>
+      </div>
+      <div class="stamp-badge" aria-hidden="true"><span>Verified<br>Locally</span></div>
+      <div class="collected-chip" id="collectedChip">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/></svg>
+        <span id="collectedCount">0</span> collected
+      </div>
+      <svg class="collage-piece hs-clip" viewBox="0 0 46 20" aria-hidden="true">
+        <rect x="2" y="4" width="42" height="12" rx="2" fill="#8A8478" stroke="#6B6156" stroke-width="1"/>
+      </svg>
+      <svg class="collage-piece hs-paperclip" viewBox="0 0 24 44" fill="none" stroke="#A9812E" stroke-width="2.2" aria-hidden="true">
+        <path d="M6 12 L6 32 a6 6 0 0 0 12 0 L18 8 a4 4 0 0 0 -8 0 L10 30 a2 2 0 0 0 4 0 L14 12"/>
+      </svg>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="active" onclick="showPage('about')" id="tab-about">About</button>
+    <button onclick="showPage('info')" id="tab-info">Information</button>
+    <button onclick="showPage('history')" id="tab-history">Asked so far</button>
+    <button onclick="showPage('common')" id="tab-common">Common questions</button>
+  </nav>
+
+  <!-- ===== PAGE 1: ABOUT ===== -->
+  <section class="page active" id="page-about">
+    <div class="sheet-stack">
+    <div class="sheet">
+    <p class="about-lead">A place to check what was actually said, before repeating it to someone else.</p>
+
+    <div class="about-block">
+      <h3>What this is for</h3>
+      <p>Exchange chats fill up fast — housing details, visa steps, form instructions, all mixed in with everyday chatter, and often corrected in a later message that's easy to miss. Checkpoint holds onto that information and answers questions about it directly, so nobody has to scroll back through hundreds of messages or ask a coordinator something that's already been answered.</p>
+    </div>
+
+    <div class="about-block">
+      <h3>What's actually happening behind the scenes</h3>
+      <p>Every answer comes from Gemma 4, a small language model running entirely on this computer through Ollama. Nothing is sent anywhere else — no cloud service ever sees your messages. Testing this model surfaced real, specific mistakes it makes (explained below), so the design works around those rather than assuming the model is always right.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="k">Runs on</div>
+        <div class="v">Gemma 4, locally, via Ollama — no internet needed once set up</div>
+      </div>
+      <div class="about-card">
+        <div class="k">Reads images too</div>
+        <div class="v">Photos and screenshots are read using on-device OCR, since testing found this model's own image reading unreliable</div>
+      </div>
+      <div class="about-card">
+        <div class="k">Flags what to check</div>
+        <div class="v">Links and form field numbers are marked automatically — the two things most likely to come out wrong</div>
+      </div>
+      <div class="about-card">
+        <div class="k">Every add earns a stamp</div>
+        <div class="v">Each source you bring in joins your collection on the Information tab, so progress is visible, not hidden</div>
+      </div>
+    </div>
+
+    <button class="primary" onclick="showPage('info')">Start adding information</button>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE 2: INFORMATION ===== -->
+  <section class="page" id="page-info">
+    <div class="sheet-stack">
+    <div class="sheet">
+    <div class="status-bar">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">Checking connection to local Ollama…</span>
+      <span class="fill"></span>
+      <label for="modelName">Model</label>
+      <input type="text" id="modelName" value="gemma4:e2b">
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-head">
+        <span class="checkpoint-index">1</span>
+        <h2>Add what you've got</h2>
+      </div>
+      <div class="checkpoint-body">
+        <div class="field-gap">
+          <label class="field-label" for="imgFile">Have a photo, PDF, or Word doc? Upload it and it'll be read for you</label>
+          <input type="file" id="imgFile" accept="image/*,.pdf,.docx" onchange="runFileExtraction()">
+          <div class="ocr-progress-wrap" id="ocrProgressWrap">
+            <div class="ocr-progress-track"><div class="ocr-progress-bar" id="ocrProgressBar"></div></div>
+          </div>
+          <p class="ocr-status" id="ocrStatus"></p>
+        </div>
+
+        <div class="field-gap">
+          <label class="field-label" for="chatFile">Or import a WhatsApp (.txt) or Telegram (.json) chat export</label>
+          <input type="file" id="chatFile" accept=".txt,.json" onchange="loadChatImport()">
+          <p class="ocr-status" id="chatStatus"></p>
+          <p class="hint" style="margin-top:6px;">WhatsApp: open the chat, menu, More, Export chat, without media. Telegram: open the chat, menu, Export chat history, format JSON.</p>
+        </div>
+
+        <div id="chatPickerWrap" style="display:none;">
+          <label class="field-label" for="chatSearch">Filter by sender or keyword</label>
+          <input type="text" id="chatSearch" placeholder="e.g. Justin, visa, dorm…" oninput="renderChatMessages()">
+          <div id="chatMessageList"></div>
+          <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
+            <button class="small" onclick="selectAllChat(true)">Select all shown</button>
+            <button class="small" onclick="selectAllChat(false)">Clear selection</button>
+            <button class="small primary" onclick="addChatSelection()">Add selected to text below</button>
+          </div>
+        </div>
+
+        <div class="field-gap">
+          <label class="field-label" for="srcName">What's this from?</label>
+          <input type="text" id="srcName" placeholder="Visa steps, dorm check-in form, campus map notes…">
+        </div>
+
+        <div class="field-gap">
+          <label class="field-label" for="srcText">Text (review anything read from an image or chat above before adding it)</label>
+          <textarea id="srcText" placeholder="Paste a message, form instructions, or check the text read above…"></textarea>
+        </div>
+
+        <button class="primary" onclick="addSource()">Add this</button>
+
+        <div class="stamp-collection" id="sourceList"></div>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-head">
+        <span class="checkpoint-index">2</span>
+        <h2>Ask your question</h2>
+      </div>
+      <div class="checkpoint-body">
+        <label class="field-label" for="question">Question</label>
+        <div class="ask-row">
+          <input type="text" id="question" placeholder="What's the max visa duration if I arrive early?">
+          <button class="primary" onclick="ask()" id="askBtn">Ask</button>
+        </div>
+        <p class="hint">Only the closest-matching entry above is sent to Gemma at once — testing showed it loses track of details when handed everything together.</p>
+      </div>
+    </div>
+
+    <div class="checkpoint" id="answerPanel" style="display:none;">
+      <div class="checkpoint-head">
+        <span class="checkpoint-index">3</span>
+        <h2>Answer</h2>
+      </div>
+      <div class="checkpoint-body">
+        <div class="used-source" id="usedSource"></div>
+        <div class="answer-box" id="answerBox"></div>
+        <div class="grounding-row" id="groundingRow" style="display:none;">
+          <div class="grounding-label">
+            <span id="groundingPct">—</span>
+            <span class="grounding-caption">of this answer's key wording is found word-for-word in the source</span>
+          </div>
+          <div class="grounding-track"><div class="grounding-bar" id="groundingBar"></div></div>
+          <p class="hint" style="margin-top:6px; margin-bottom:0;">This measures overlap with the source text, not whether the answer is actually correct — Gemma cannot reliably judge its own accuracy, so this is calculated directly rather than asked of the model.</p>
+        </div>
+        <div class="flag-count" id="flagCount" style="display:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v18M4 4h11l-2 4 2 4H4"/></svg>
+          <span id="flagCountText"></span>
+        </div>
+        <button class="small" style="margin-top:14px;" onclick="toggleRaw()">Show original model output</button>
+        <pre class="raw" id="rawOutput"></pre>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE 3: HISTORY ===== -->
+  <section class="page" id="page-history">
+    <div class="sheet-stack">
+    <div class="sheet">
+    <div class="checkpoint-head" style="margin-bottom:18px;">
+      <h2 style="font-family:'Fraunces',serif; font-weight:500; font-size:18px; margin:0; color:var(--ink);">Everything asked so far</h2>
+    </div>
+    <div id="historyList"></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE 4: COMMON QUESTIONS ===== -->
+  <section class="page" id="page-common">
+    <div class="sheet-stack">
+    <div class="sheet">
+    <div class="checkpoint-head" style="margin-bottom:6px;">
+      <h2 style="font-family:'Fraunces',serif; font-weight:500; font-size:18px; margin:0; color:var(--ink);">Questions worth answering once</h2>
+    </div>
+    <p class="hint" style="margin-bottom:18px;">Grouped by matching wording — the same question showing up more than once is exactly the pattern a mentor or coordinator ends up answering over and over.</p>
+    <div id="commonList"></div>
+
+    <div class="checkpoint" style="margin-top:26px; margin-bottom:0;">
+      <div class="checkpoint-head">
+        <h2 style="font-family:'Fraunces',serif; font-weight:500; font-size:16px; margin:0; color:var(--ink);">Take it with you</h2>
+      </div>
+      <div class="checkpoint-body">
+        <p class="hint" style="margin-top:0; margin-bottom:14px;">Saves everything collected so far — sources, every question asked, and this grouping — as one file. Nothing is sent anywhere; the file is built right here in your browser.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" onclick="exportAsPdf()">Download as PDF</button>
+          <button onclick="exportAsWord()">Download as Word</button>
+        </div>
+        <p class="hint" id="exportStatus" style="margin-top:10px;"></p>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.0/mammoth.browser.min.js"></script>
+<script>
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+}
+</script>
+<script>
+const OLLAMA_URL = 'http://localhost:11434/api/generate';
+let sources = [];
+let history = [];
+const ROTATIONS = [-6, 4, -3, 6, -5, 2, -8, 3, 5, -4];
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'history') renderHistory();
+  if (name === 'common') renderCommon();
+}
+
+async function checkConnection() {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  try {
+    const res = await fetch('http://localhost:11434/api/tags');
+    if (res.ok) {
+      dot.className = 'dot on';
+      text.textContent = 'Connected to local Ollama';
+    } else {
+      throw new Error('bad response');
+    }
+  } catch (e) {
+    dot.className = 'dot off';
+    text.textContent = 'Can\u2019t reach Ollama at localhost:11434 \u2014 see README';
+  }
+}
+checkConnection();
+
+async function runFileExtraction() {
+  const fileInput = document.getElementById('imgFile');
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const name = file.name.toLowerCase();
+  if (file.type.startsWith('image/')) {
+    await extractFromImage(file);
+  } else if (name.endsWith('.pdf') || file.type === 'application/pdf') {
+    await extractFromPdf(file);
+  } else if (name.endsWith('.docx')) {
+    await extractFromDocx(file);
+  } else {
+    document.getElementById('ocrStatus').textContent = 'That file type isn\u2019t supported \u2014 use an image, a PDF, or a .docx Word file.';
+  }
+}
+
+async function extractFromImage(file) {
+  const status = document.getElementById('ocrStatus');
+  const progressWrap = document.getElementById('ocrProgressWrap');
+  const progressBar = document.getElementById('ocrProgressBar');
+  const textarea = document.getElementById('srcText');
+
+  status.textContent = 'Starting\u2026';
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '0%';
+
+  try {
+    const result = await Tesseract.recognize(file, 'eng', {
+      logger: (m) => {
+        if (m.status === 'recognizing text') {
+          const pct = Math.round((m.progress || 0) * 100);
+          progressBar.style.width = pct + '%';
+          status.textContent = 'Reading image\u2026 ' + pct + '%';
+        } else {
+          status.textContent = m.status || 'Working\u2026';
+        }
+      }
+    });
+    textarea.value = result.data.text.trim();
+    status.textContent = 'Done \u2014 check it over before adding, this can misread small or busy text.';
+  } catch (e) {
+    status.textContent = 'Couldn\u2019t read that image: ' + e.message;
+  } finally {
+    setTimeout(() => { progressWrap.style.display = 'none'; }, 800);
+  }
+}
+
+async function extractFromPdf(file) {
+  const status = document.getElementById('ocrStatus');
+  const progressWrap = document.getElementById('ocrProgressWrap');
+  const progressBar = document.getElementById('ocrProgressBar');
+  const textarea = document.getElementById('srcText');
+
+  if (typeof pdfjsLib === 'undefined') {
+    status.textContent = 'The PDF reader hasn\u2019t loaded \u2014 check your internet connection and try again.';
+    return;
+  }
+
+  status.textContent = 'Opening PDF\u2026';
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '0%';
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map(it => it.str).join(' ');
+      fullText += (fullText ? '\n\n' : '') + pageText;
+      const pct = Math.round((i / pdf.numPages) * 100);
+      progressBar.style.width = pct + '%';
+      status.textContent = `Reading page ${i} of ${pdf.numPages}\u2026`;
+    }
+    textarea.value = fullText.trim();
+    if (!fullText.trim()) {
+      status.textContent = 'No selectable text found \u2014 this PDF may be scanned images rather than real text. Try saving a page as an image and uploading that instead, so OCR can read it.';
+    } else {
+      status.textContent = `Done \u2014 read ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''}. Check it over before adding.`;
+    }
+  } catch (e) {
+    status.textContent = 'Couldn\u2019t read that PDF: ' + e.message;
+  } finally {
+    setTimeout(() => { progressWrap.style.display = 'none'; }, 800);
+  }
+}
+
+async function extractFromDocx(file) {
+  const status = document.getElementById('ocrStatus');
+  const textarea = document.getElementById('srcText');
+
+  if (typeof mammoth === 'undefined') {
+    status.textContent = 'The Word reader hasn\u2019t loaded \u2014 check your internet connection and try again.';
+    return;
+  }
+
+  status.textContent = 'Reading document\u2026';
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+    textarea.value = result.value.trim();
+    status.textContent = result.value.trim()
+      ? 'Done \u2014 check it over before adding.'
+      : 'No text found in that document.';
+  } catch (e) {
+    status.textContent = 'Couldn\u2019t read that Word file: ' + e.message;
+  }
+}
+
+/* ---------- WhatsApp + Telegram import ---------- */
+let chatMessages = [];
+let chatSelected = new Set();
+
+function parseWhatsApp(text) {
+  const lines = text.split(/\r?\n/);
+  const messages = [];
+  const androidRe = /^(\d{1,2}\/\d{1,2}\/\d{2,4}),?\s(\d{1,2}:\d{2}(?:\s?[APMapm]{2})?)\s-\s([^:]+):\s(.*)$/;
+  const iosRe = /^\[(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:\s?[APMapm]{2})?)\]\s([^:]+):\s(.*)$/;
+
+  for (const line of lines) {
+    const m = line.match(androidRe) || line.match(iosRe);
+    if (m) {
+      messages.push({ date: m[1], time: m[2], sender: m[3].trim(), text: m[4] });
+    } else if (messages.length > 0 && line.trim() !== '') {
+      messages[messages.length - 1].text += '\n' + line;
+    }
+  }
+  return messages;
+}
+
+function extractTelegramText(val) {
+  if (typeof val === 'string') return val;
+  if (Array.isArray(val)) {
+    return val.map(t => (typeof t === 'string') ? t : (t && t.text ? t.text : '')).join('');
+  }
+  return '';
+}
+
+function parseTelegram(jsonText) {
+  let data;
+  try { data = JSON.parse(jsonText); } catch (e) { return null; }
+  const msgs = data.messages || (data.chats && data.chats.list && data.chats.list[0] && data.chats.list[0].messages);
+  if (!Array.isArray(msgs)) return null;
+
+  const messages = [];
+  for (const m of msgs) {
+    if (m.type && m.type !== 'message') continue;
+    const text = extractTelegramText(m.text).trim();
+    if (!text) continue;
+    let date = m.date || '';
+    let time = '';
+    if (date.includes('T')) {
+      const parts = date.split('T');
+      date = parts[0];
+      time = (parts[1] || '').slice(0, 5);
+    }
+    messages.push({ date, time, sender: m.from || m.actor || 'Unknown', text });
+  }
+  return messages;
+}
+
+function loadChatImport() {
+  const fileInput = document.getElementById('chatFile');
+  const file = fileInput.files[0];
+  if (!file) return;
+  const status = document.getElementById('chatStatus');
+  status.textContent = 'Reading file\u2026';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const raw = e.target.result;
+    let parsed = null;
+    let sourceKind = '';
+
+    if (file.name.toLowerCase().endsWith('.json')) {
+      parsed = parseTelegram(raw);
+      sourceKind = 'Telegram';
+    } else {
+      parsed = parseWhatsApp(raw);
+      sourceKind = 'WhatsApp';
+    }
+
+    if (!parsed || parsed.length === 0) {
+      status.textContent = `Couldn\u2019t find any messages in that file \u2014 make sure it\u2019s a WhatsApp "Export chat" .txt file or a Telegram "Export chat history" .json file.`;
+      document.getElementById('chatPickerWrap').style.display = 'none';
+      return;
+    }
+    chatMessages = parsed;
+    chatSelected = new Set();
+    status.textContent = `Found ${parsed.length} messages from ${sourceKind}. Pick the ones worth keeping below.`;
+    document.getElementById('chatPickerWrap').style.display = 'block';
+    renderChatMessages();
+  };
+  reader.readAsText(file);
+}
+
+function renderChatMessages() {
+  const search = document.getElementById('chatSearch').value.toLowerCase();
+  const list = document.getElementById('chatMessageList');
+  const filtered = chatMessages
+    .map((m, i) => ({ ...m, i }))
+    .filter(m => !search || m.sender.toLowerCase().includes(search) || m.text.toLowerCase().includes(search));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<p class="empty-hint" style="padding:12px;">No messages match that filter.</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(m => `
+    <label>
+      <input type="checkbox" style="margin-top:3px;" ${chatSelected.has(m.i) ? 'checked' : ''} onchange="toggleChat(${m.i}, this.checked)">
+      <span>
+        <span style="font-family:'IBM Plex Mono',monospace; color:var(--brass); font-size:11px;">${escapeHtml(m.date)} ${escapeHtml(m.time)} \u2014 ${escapeHtml(m.sender)}</span><br>
+        <span>${escapeHtml(m.text)}</span>
+      </span>
+    </label>
+  `).join('');
+}
+
+function toggleChat(i, checked) {
+  if (checked) chatSelected.add(i); else chatSelected.delete(i);
+}
+
+function selectAllChat(select) {
+  const search = document.getElementById('chatSearch').value.toLowerCase();
+  chatMessages.forEach((m, i) => {
+    const matches = !search || m.sender.toLowerCase().includes(search) || m.text.toLowerCase().includes(search);
+    if (matches) { if (select) chatSelected.add(i); else chatSelected.delete(i); }
+  });
+  renderChatMessages();
+}
+
+function addChatSelection() {
+  if (chatSelected.size === 0) { alert('Check at least one message first.'); return; }
+  const chosen = Array.from(chatSelected).sort((a, b) => a - b).map(i => chatMessages[i]);
+  const combined = chosen.map(m => `[${m.date} ${m.time}] ${m.sender}: ${m.text}`).join('\n');
+  const textarea = document.getElementById('srcText');
+  textarea.value = textarea.value ? textarea.value + '\n' + combined : combined;
+  document.getElementById('srcName').focus();
+}
+
+function addSource() {
+  const name = document.getElementById('srcName').value.trim();
+  const text = document.getElementById('srcText').value.trim();
+  if (!name || !text) { alert('Give it a name and some text first.'); return; }
+  sources.push({ name, text });
+  document.getElementById('srcName').value = '';
+  document.getElementById('srcText').value = '';
+  document.getElementById('imgFile').value = '';
+  document.getElementById('ocrStatus').textContent = '';
+  renderSources();
+  bumpCollectedCount();
+}
+
+function bumpCollectedCount() {
+  const el = document.getElementById('collectedCount');
+  const chip = document.getElementById('collectedChip');
+  el.textContent = sources.length;
+  chip.classList.remove('pulse');
+  void chip.offsetWidth;
+  chip.classList.add('pulse');
+}
+
+function removeSource(i) {
+  sources.splice(i, 1);
+  renderSources();
+  document.getElementById('collectedCount').textContent = sources.length;
+}
+
+function renderSources() {
+  const list = document.getElementById('sourceList');
+  if (sources.length === 0) {
+    list.innerHTML = '<p class="empty-hint">Nothing added yet \u2014 the first thing you add will earn a stamp here.</p>';
+    return;
+  }
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  list.innerHTML = sources.map((s, i) => `
+    <div class="stamp-card" style="--rot: rotate(${ROTATIONS[i % ROTATIONS.length]}deg); transform: ${reduceMotion ? '' : 'rotate(' + ROTATIONS[i % ROTATIONS.length] + 'deg)'};">
+      <button class="remove-x" onclick="removeSource(${i})" aria-label="Remove ${escapeHtml(s.name)}">\u2715</button>
+      <div class="mini-postmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7l8 6 8-6M4 7v10h16V7"/></svg></div>
+      <div class="name">${escapeHtml(s.name.length > 22 ? s.name.slice(0, 20) + '\u2026' : s.name)}</div>
+    </div>
+  `).join('');
+}
+renderSources();
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function boldOnly(text) {
+  const lines = escapeHtml(text).split('\n');
+  const withQuotesBold = lines.map(line => {
+    const quoteMatch = line.match(/^(\s*&gt;\s?)(.*)$/);
+    if (quoteMatch && quoteMatch[2].trim() !== '') {
+      return quoteMatch[1] + '<b>' + quoteMatch[2] + '</b>';
+    }
+    return line;
+  }).join('\n');
+  return withQuotesBold.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+
+function pickBestSource(question) {
+  if (sources.length === 0) return null;
+  const qWords = question.toLowerCase().match(/[a-z0-9]+/g) || [];
+  let best = sources[0], bestScore = -1;
+  for (const s of sources) {
+    const textLower = s.text.toLowerCase();
+    let score = 0;
+    for (const w of qWords) {
+      if (w.length < 3) continue;
+      if (textLower.includes(w)) score++;
+    }
+    if (score > bestScore) { bestScore = score; best = s; }
+  }
+  return best;
+}
+
+async function ask() {
+  const question = document.getElementById('question').value.trim();
+  if (!question) { alert('Type a question first.'); return; }
+  const source = pickBestSource(question);
+  if (!source) { alert('Add something to check first.'); return; }
+
+  const btn = document.getElementById('askBtn');
+  btn.disabled = true;
+  btn.textContent = 'Asking\u2026';
+
+  const prompt = `Answer the question using ONLY the text below. Follow this exact structure:
+
+1. Start with one sentence beginning "Based on [name]'s advice" (or "Based on the source" if no name is given), stating the general rule in plain words.
+2. Add one short paragraph explaining it in more detail if needed.
+3. Then write a line like "[Name] advised this specifically:" followed by their exact original words on their own line starting with "> ".
+4. If the source doesn't name anyone, skip steps 1 and 3's naming and just explain the answer, still quoting the exact relevant line with "> " if one exists.
+
+Reproduce any URLs, numbers, or field codes exactly as written, do not shorten or combine them. If the answer isn't in the text, say so clearly instead of guessing \u2014 do not invent a structure or a quote that isn't there.
+
+Text:
+${source.text}
+
+Question: ${question}`;
+
+  try {
+    const res = await fetch(OLLAMA_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: document.getElementById('modelName').value.trim() || 'gemma4:e2b',
+        prompt: prompt,
+        stream: false
+      })
+    });
+    const data = await res.json();
+    showAnswer(question, source, data.response || '(no response returned)');
+  } catch (e) {
+    showAnswer(question, source, null, e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Ask';
+  }
+}
+
+function renderMarkdownLite(escapedText) {
+  const lines = escapedText.split('\n');
+  let html = '';
+
+  for (const line of lines) {
+    const quoteMatch = line.match(/^\s*&gt;\s?(.*)$/);
+    if (quoteMatch) {
+      html += '<div style="border-left:3px solid var(--brass); padding:4px 0 4px 12px; margin:6px 0; font-style:italic; color:var(--ink-soft);"><b>' + quoteMatch[1] + '</b></div>';
+    } else if (line.trim() === '') {
+      html += '<div style="height:8px;"></div>';
+    } else {
+      html += '<p style="margin:0 0 8px;">' + line + '</p>';
+    }
+  }
+
+  // **bold** -> <b>
+  html = html.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  return html;
+}
+
+function flagAnswer(text) {
+  let flagged = renderMarkdownLite(escapeHtml(text));
+  let count = 0;
+
+  flagged = flagged.replace(/\bhttps?:\/\/[^\s]+/g, (m) => {
+    count++;
+    return `<span class="flag" onclick="toggleNote()">${m}</span>`;
+  });
+
+  flagged = flagged.replace(/\b\d+\.\d+[A-Za-z]?\b/g, (m) => {
+    count++;
+    return `<span class="flag" onclick="toggleNote()">${m}</span>`;
+  });
+
+  return { html: flagged, count };
+}
+
+function computeGrounding(answerText, sourceText) {
+  const words = (answerText.toLowerCase().match(/[a-z0-9]{4,}/g) || []);
+  const unique = Array.from(new Set(words));
+  if (unique.length === 0) return null;
+  const sourceLower = sourceText.toLowerCase();
+  let matched = 0;
+  for (const w of unique) {
+    if (sourceLower.includes(w)) matched++;
+  }
+  return Math.round((matched / unique.length) * 100);
+}
+
+function showAnswer(question, source, text, error) {
+  document.getElementById('answerPanel').style.display = 'block';
+  document.getElementById('usedSource').textContent = 'From \u2014 ' + source.name;
+  const box = document.getElementById('answerBox');
+  const flagCount = document.getElementById('flagCount');
+  const flagCountText = document.getElementById('flagCountText');
+  const raw = document.getElementById('rawOutput');
+  const groundingRow = document.getElementById('groundingRow');
+
+  if (error || text === null) {
+    box.innerHTML = `<span class="error-text">Couldn\u2019t reach Gemma. Check that Ollama is running (\`ollama serve\`) and the model name above is correct.</span>`;
+    flagCount.style.display = 'none';
+    groundingRow.style.display = 'none';
+    raw.textContent = error ? String(error) : '';
+    return;
+  }
+
+  const { html, count } = flagAnswer(text);
+  box.innerHTML = html + `<div class="source-note" id="fullSourceNote"><div class="src-label">Full original \u2014 ${escapeHtml(source.name)}</div>${escapeHtml(source.text)}</div>`;
+
+  const grounding = computeGrounding(text, source.text);
+  if (grounding === null) {
+    groundingRow.style.display = 'none';
+  } else {
+    groundingRow.style.display = 'block';
+    document.getElementById('groundingPct').textContent = grounding + '%';
+    const bar = document.getElementById('groundingBar');
+    bar.style.width = grounding + '%';
+    bar.className = 'grounding-bar' + (grounding < 50 ? ' low' : grounding < 80 ? ' mid' : '');
+  }
+
+  if (count > 0) {
+    flagCount.style.display = 'flex';
+    flagCountText.textContent = `${count} item${count > 1 ? 's' : ''} marked for a second look \u2014 links and field codes are the two things testing found Gemma sometimes gets wrong. Click one to compare against the original.`;
+  } else {
+    flagCount.style.display = 'none';
+  }
+
+  raw.innerHTML = boldOnly(text);
+
+  history.push({
+    question: question,
+    sourceName: source.name,
+    answer: text,
+    flagCount: count,
+    grounding: grounding,
+    time: new Date()
+  });
+}
+
+function toggleNote() {
+  const note = document.getElementById('fullSourceNote');
+  note.className = note.className.includes('open') ? 'source-note' : 'source-note open';
+  note.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function toggleRaw() {
+  const raw = document.getElementById('rawOutput');
+  raw.style.display = raw.style.display === 'block' ? 'none' : 'block';
+}
+
+function formatTime(d) {
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<p class="empty-hint">Nothing asked yet \u2014 questions you ask on the Information page will show up here.</p>';
+    return;
+  }
+  const items = history.slice().reverse();
+  list.innerHTML = items.map(h => `
+    <div class="history-item">
+      <div class="q-row">
+        <div class="q-text">${escapeHtml(h.question)}</div>
+        <div class="q-time">${formatTime(h.time)}</div>
+      </div>
+      <div class="q-meta">Source \u2014 ${escapeHtml(h.sourceName)}</div>
+      <div class="q-answer">${escapeHtml(h.answer.slice(0, 220))}${h.answer.length > 220 ? '\u2026' : ''}</div>
+      ${h.flagCount > 0 ? `<div class="q-flags"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v18M4 4h11l-2 4 2 4H4"/></svg>${h.flagCount} flagged</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function normalizeQuestion(q) {
+  return q.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function getCommonGroups() {
+  const groups = {};
+  for (const h of history) {
+    const key = normalizeQuestion(h.question);
+    if (!groups[key]) groups[key] = { original: h.question, count: 0, sources: new Set() };
+    groups[key].count++;
+    groups[key].sources.add(h.sourceName);
+  }
+  return Object.values(groups).sort((a, b) => b.count - a.count);
+}
+
+function renderCommon() {
+  const list = document.getElementById('commonList');
+  if (history.length === 0) {
+    list.innerHTML = '<p class="empty-hint">Once a few questions have been asked, repeated ones will be grouped here.</p>';
+    return;
+  }
+
+  const sorted = getCommonGroups();
+
+  list.innerHTML = sorted.map(g => `
+    <div class="common-item">
+      <div class="common-count">${g.count}</div>
+      <div>
+        <div class="common-text">${escapeHtml(g.original)}</div>
+        <div class="common-sub">${g.count > 1 ? 'Asked ' + g.count + ' times' : 'Asked once'} \u00b7 answered from ${Array.from(g.sources).map(escapeHtml).join(', ')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ---------- Export: PDF and Word ---------- */
+function hasNothingToExport() {
+  return sources.length === 0 && history.length === 0;
+}
+
+function exportAsPdf() {
+  const status = document.getElementById('exportStatus');
+  if (hasNothingToExport()) { status.textContent = 'Nothing collected yet \u2014 add a source or ask a question first.'; return; }
+  if (typeof window.jspdf === 'undefined') { status.textContent = 'The PDF library hasn\u2019t loaded \u2014 check your internet connection and try again.'; return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const marginX = 48;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = pageWidth - marginX * 2;
+  let y = 56;
+
+  function ensureRoom(lineHeight) {
+    if (y + lineHeight > pageHeight - 48) { doc.addPage(); y = 56; }
+  }
+  function heading(text, size) {
+    ensureRoom(size + 10);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(size);
+    doc.text(text, marginX, y);
+    y += size + 8;
+  }
+  function paragraph(text, size) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(size || 10.5);
+    const lines = doc.splitTextToSize(text, maxWidth);
+    for (const line of lines) {
+      ensureRoom(14);
+      doc.text(line, marginX, y);
+      y += 14;
+    }
+    y += 6;
+  }
+
+  heading('Checkpoint \u2014 Collected Information', 18);
+  paragraph('Exported ' + new Date().toLocaleString() + '. Built locally in the browser \u2014 nothing here was sent anywhere.', 9.5);
+  y += 6;
+
+  heading('Sources (' + sources.length + ')', 13);
+  if (sources.length === 0) {
+    paragraph('None added yet.');
+  } else {
+    sources.forEach((s, i) => {
+      paragraph((i + 1) + '. ' + s.name, 11);
+      paragraph(s.text, 9.5);
+    });
+  }
+
+  heading('Questions asked (' + history.length + ')', 13);
+  if (history.length === 0) {
+    paragraph('None asked yet.');
+  } else {
+    history.forEach((h, i) => {
+      paragraph((i + 1) + '. ' + h.question + '  [' + formatTime(h.time) + ']', 11);
+      paragraph('Source: ' + h.sourceName + (h.flagCount > 0 ? '  \u2014 ' + h.flagCount + ' flagged for review' : ''), 9.5);
+      paragraph(h.answer, 9.5);
+    });
+  }
+
+  const groups = getCommonGroups();
+  heading('Common questions', 13);
+  if (groups.length === 0) {
+    paragraph('Nothing grouped yet.');
+  } else {
+    groups.forEach((g) => {
+      paragraph('\u2022 ' + g.original + '  \u2014  ' + (g.count > 1 ? 'asked ' + g.count + ' times' : 'asked once'), 10.5);
+    });
+  }
+
+  doc.save('checkpoint-export.pdf');
+  status.textContent = 'PDF downloaded.';
+}
+
+function exportAsWord() {
+  const status = document.getElementById('exportStatus');
+  if (hasNothingToExport()) { status.textContent = 'Nothing collected yet \u2014 add a source or ask a question first.'; return; }
+
+  const groups = getCommonGroups();
+
+  const sourcesHtml = sources.length === 0
+    ? '<p>None added yet.</p>'
+    : sources.map((s, i) => `<p><b>${i + 1}. ${escapeHtml(s.name)}</b></p><p>${escapeHtml(s.text).replace(/\n/g, '<br>')}</p>`).join('');
+
+  const historyHtml = history.length === 0
+    ? '<p>None asked yet.</p>'
+    : history.map((h, i) => `
+        <p><b>${i + 1}. ${escapeHtml(h.question)}</b> <span style="color:#6B6156;">[${formatTime(h.time)}]</span></p>
+        <p style="color:#6B6156;">Source: ${escapeHtml(h.sourceName)}${h.flagCount > 0 ? ' \u2014 ' + h.flagCount + ' flagged for review' : ''}</p>
+        <p>${escapeHtml(h.answer).replace(/\n/g, '<br>')}</p>
+      `).join('');
+
+  const commonHtml = groups.length === 0
+    ? '<p>Nothing grouped yet.</p>'
+    : '<ul>' + groups.map(g => `<li>${escapeHtml(g.original)} \u2014 ${g.count > 1 ? 'asked ' + g.count + ' times' : 'asked once'}</li>`).join('') + '</ul>';
+
+  const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset="utf-8"><title>Checkpoint Export</title></head>
+<body style="font-family:Calibri,Arial,sans-serif;">
+  <h1>Checkpoint \u2014 Collected Information</h1>
+  <p style="color:#6B6156;">Exported ${new Date().toLocaleString()}. Built locally in the browser \u2014 nothing here was sent anywhere.</p>
+  <h2>Sources (${sources.length})</h2>
+  ${sourcesHtml}
+  <h2>Questions asked (${history.length})</h2>
+  ${historyHtml}
+  <h2>Common questions</h2>
+  ${commonHtml}
+</body></html>`;
+
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'checkpoint-export.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  status.textContent = 'Word document downloaded.';
+}
+
+</script>
+</body>
+</html>
